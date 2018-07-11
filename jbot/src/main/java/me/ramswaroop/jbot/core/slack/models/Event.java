@@ -9,8 +9,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.*;
-
 /**
  * Created by ramswaroop on 10/06/2016.
  */
@@ -39,6 +37,7 @@ public class Event {
     @JsonProperty("pinned_to")
     private String[] pinnedTo;
     private Channel channel;
+    private Channel[] ims;
     private Item item;
     private Bot bot;
     private File file;
@@ -80,6 +79,9 @@ public class Event {
     @JsonProperty("event_ts")
     private String eventTs;
     private Message message;
+    private Attachment[] attachments;
+    @JsonProperty("response_metadata")
+    private ResponseMetadata responseMetadata;
 
     public int getId() {
         return id;
@@ -175,6 +177,14 @@ public class Event {
 
     public void setChannel(Channel channel) {
         this.channel = channel;
+    }
+
+    public Channel[] getIms() {
+        return ims;
+    }
+
+    public void setIms(Channel[] ims) {
+        this.ims = ims;
     }
 
     public Item getItem() {
@@ -415,7 +425,7 @@ public class Event {
             try {
                 this.channel = new ObjectMapper().treeToValue(jsonNode, Channel.class);
             } catch (JsonProcessingException e) {
-                logger.error("Error deserializing json: {}", e.getMessage());
+                logger.error("Error deserializing json: ", e);
             }
         } else if (jsonNode.isTextual()) {
             this.channelId = jsonNode.asText();
@@ -428,7 +438,7 @@ public class Event {
             try {
                 this.file = new ObjectMapper().treeToValue(jsonNode, File.class);
             } catch (JsonProcessingException e) {
-                logger.error("Error deserializing json: {}", e.getMessage());
+                logger.error("Error deserializing json: ", e);
             }
         } else if (jsonNode.isTextual()) {
             this.fileId = jsonNode.asText();
@@ -441,7 +451,7 @@ public class Event {
             try {
                 this.comment = new ObjectMapper().treeToValue(jsonNode, Comment.class);
             } catch (JsonProcessingException e) {
-                logger.error("Error deserializing json: {}", e.getMessage());
+                logger.error("Error deserializing json: ", e);
             }
         } else if (jsonNode.isTextual()) {
             this.commentId = jsonNode.asText();
@@ -454,7 +464,7 @@ public class Event {
             try {
                 this.user = new ObjectMapper().treeToValue(jsonNode, User.class);
             } catch (JsonProcessingException e) {
-                logger.error("Error deserializing json: {}", e.getMessage());
+                logger.error("Error deserializing json: ", e);
             }
         } else if (jsonNode.isTextual()) {
             this.userId = jsonNode.asText();
@@ -483,5 +493,21 @@ public class Event {
 
     public void setMessage(Message message) {
         this.message = message;
+    }
+
+    public Attachment[] getAttachments() {
+        return attachments;
+    }
+
+    public void setAttachments(Attachment[] attachments) {
+        this.attachments = attachments;
+    }
+
+    public ResponseMetadata getResponseMetadata() {
+        return responseMetadata;
+    }
+
+    public void setResponseMetadata(ResponseMetadata responseMetadata) {
+        this.responseMetadata = responseMetadata;
     }
 }
